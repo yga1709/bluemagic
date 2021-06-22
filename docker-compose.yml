@@ -1,0 +1,62 @@
+version: "3.7"
+services:
+    flask:
+        container_name: bluemagic_flask
+        restart: always
+        build:
+        context: ./flask
+        dockerfile: Dockerfile
+        ports:
+            - "5000:5000"
+        depends_on:
+            - mariadb
+        volumes:
+            - ./:/api
+            # - 接続するメディア
+        #command: ["python3", "./flask/main.py"]
+
+    web:
+        container_name: bluemagic_vue
+        build:
+            context: ./vue
+            dockerfile: Dockerfile
+        ports:
+            - "9050:9050"
+        volumes:
+            - ./:/usr/src/app
+        stdin_open: true
+        tty: true
+
+    mariadb:
+        container_name: bluemagic_mariadb
+        #image: mariadb:10.5
+        build:
+            context: ./mysql
+            dockerfile: Dockerfile
+        restart: always
+        ports:
+                - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        volumes:
+            - ./mysql/data:/var/lib/mysql
+            - ./mysql/my.conf:/etc/mysql/conf.d/my.cnf
+            - ./mysql/sqls:/docker-entrypoint-initdb.d
+        
+    media:
+        container_name: bluemagic_media
+        build: 
+        context: ./media
+        dockerfile: Dockerfile
+        restart: always
+        ports:
+            - "8000:80"
+        volumes:
+            - ./media:/usr/src/app
+            - ./media/default.conf:/etc/nginx/conf.d/default.conf
+            - ./media/mime.types:/etc/nginx/mime.types
+            # 接続するメディア
+      
