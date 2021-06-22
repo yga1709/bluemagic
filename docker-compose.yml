@@ -4,8 +4,8 @@ services:
         container_name: bluemagic_flask
         restart: always
         build:
-        context: ./flask
-        dockerfile: Dockerfile
+            context: ./flask
+            dockerfile: Dockerfile
         ports:
             - "5000:5000"
         depends_on:
@@ -49,8 +49,8 @@ services:
     media:
         container_name: bluemagic_media
         build: 
-        context: ./media
-        dockerfile: Dockerfile
+            context: ./media
+            dockerfile: Dockerfile
         restart: always
         ports:
             - "8000:80"
