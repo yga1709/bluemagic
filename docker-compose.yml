@@ -13,7 +13,7 @@ services:
         volumes:
             - ./:/api
             # - 接続するメディア
-        #command: ["python3", "./flask/main.py"]
+        command: ["python3", "./flask/main.py"]
 
     web:
         container_name: bluemagic_vue
